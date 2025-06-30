@@ -758,18 +758,18 @@
         }
     </style>
 </head>
-<body>
+<!-- <body>
     <div class="dashboard-container">
         <header class="dashboard-header">
             <div class="logo-section">
-                <img src="{{ asset('image/logo tel.png') }}" alt="Logo TPL" class="company-logo">
+                <img src="{{ asset('images/logo.png') }}" alt="Logo TPL" class="company-logo">
                 <h1>PT TANJUNGENIM LESTARI PULP AND PAPER</h1>
             </div>
-            <!-- <div class="operator-section">
+            <div class="operator-section">
                 <span class="operator-text">Operator</span>
                 <img src="{{ asset('images/user.png') }}" alt="User Icon" class="user-icon">
                 <i class="fas fa-caret-down"></i>
-            </div> -->
+            </div>
         </header>
 
         <div class="main-content-wrapper">
@@ -786,11 +786,11 @@
                                 Manajemen Barang
                             </a>
                         </li>
-                        <!-- <li class="menu-item">
+                        <li class="menu-item">
                             <a href="#">
                                 Data Barang
                             </a>
-                        </li> -->
+                        </li>
                         <li class="menu-item">
                             <a href="#">
                                 Pengembalian
@@ -811,7 +811,7 @@
                 </div>
             </main>
         </div>
-    </div>
+    </div> -->
 
     <!-- PENTING: Ganti 'YOUR_UNIQUE_KIT_CODE.js' dengan ID kit Font Awesome Anda! -->
     <script src="https://kit.fontawesome.com/YOUR_UNIQUE_KIT_CODE.js" crossorigin="anonymous"></script>
