@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\BarangManajemenController; // Import controller baru
+use App\Http\Controllers\PimpinanController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -50,3 +54,18 @@ Route::get('/notifications', function () {
 Route::get('/', function () {
     return view('welcome');
 });
+
+    
+ Route::prefix('pimpinan')->name('pimpinan.')->group(function () {
+    Route::get('/dashboard', [PimpinanController::class, 'dashboard'])->name('dashboard'); 
+   Route::get('/barang-masuk', [PimpinanController::class, 'barangMasuk'])->name('barang-masuk');
+    Route::get('/barang-keluar', [PimpinanController::class, 'barangKeluar'])->name('barang-keluar');
+    Route::get('/databarang', [PimpinanController::class, 'dataBarang'])->name('databarang');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+});
+
+Route::get('/barang-masuk/cetak', [PimpinanController::class, 'cetakBarangMasuk'])->name('cetak-barang-masuk');
+Route::get('/barang-keluar/cetak', [PimpinanController::class, 'cetakBarangKeluar'])->name('cetak-barang-keluar');
+Route::get('/databarang/cetak', [PimpinanController::class, 'cetakDataBarang'])->name('cetak-databarang');
+
