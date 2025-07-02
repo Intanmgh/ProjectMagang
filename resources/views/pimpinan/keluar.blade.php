@@ -1,0 +1,16 @@
+@extends('layouts.app-pimpinan')
+
+@section('navbar-title', 'Barang Keluar')
+
+@section('content')
+    <h1>Riwayat Peminjam</h1>
+
+    <!-- Tombol Cetak -->
+    <a href="{{ url('/pimpinan/barang-masuk/cetak') }}" target="_blank" 
+       style="display:inline-block; margin-bottom:20px; padding:10px 20px; background-color:#388E3C; color:white; border-radius:5px; text-decoration:none;">
+        🖨️ Cetak Laporan
+    </a>
+
+    <!-- Tabel atau konten lainnya -->
+    <p>Menampilkan Riwayat Peminjaman...</p>
+@endsection
