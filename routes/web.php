@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\BarangManajemenController;
+use App\Http\Controllers\BarangManajemenController; // Import controller baru
+use App\Http\Controllers\Auth\LoginController; // Impor LoginController
+use Illuminate\Support\Facades\Auth; // Impor Auth facade
+use App\Http\Controllers\PimpinanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,17 +13,54 @@ use App\Http\Controllers\BarangManajemenController;
 |--------------------------------------------------------------------------
 */
 
-// Authentication Routes (jika nanti diaktifkan kembali)
-// Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-// Route::post('/login', [AuthController::class, 'login']);
-// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// Route untuk halaman utama (opsional, bisa diarahkan ke login jika belum login)
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
-// Dashboard
+// Route untuk Login dan Logout
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+// Grup route yang memerlukan autentikasi (sudah login)
+Route::middleware(['auth'])->group(function () {
+    // Route untuk Dashboard Admin (hanya bisa diakses oleh role 'admin')
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin/dashboard', function () {
+            return view('dashboard'); // Buat view admin/dashboard.blade.php
+        })->name('dashboard');
+        // Tambahkan route khusus admin lainnya di sini
+    });
+
+    // Route untuk Dashboard Pimpinan (hanya bisa diakses oleh role 'pimpinan')
+    Route::middleware(['role:pimpinan'])->group(function () {
+        Route::get('/pimpinan/dashboard', function () {
+            return view('pimpinan.dashboard'); // Buat view pimpinan/dashboard.blade.php
+        })->name('pimpinan.dashboard');
+        // Tambahkan route khusus pimpinan lainnya di sini
+    });
+
+    // Route untuk Dashboard User Biasa (hanya bisa diakses oleh role 'user')
+    Route::middleware(['role:user'])->group(function () {
+        Route::get('/user/dashboard', function () {
+            return view('user.dashboard'); // Buat view user/dashboard.blade.php
+        })->name('user.dashboard');
+        // Tambahkan route khusus user lainnya di sini
+    });
+
+    // Route default setelah login jika tidak ada role yang cocok (opsional)
+    // Atau bisa juga route home umum untuk semua yang sudah login
+    Route::get('/home', function () {
+        return "Anda sudah login, tapi tidak ada dashboard spesifik untuk role Anda.";
+    })->name('home');
+}); 
+
+
+// Dashboard Route (Ini sekarang di luar grup auth, atau Anda bisa pindahkan ke dalam jika perlu auth)
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-// -------------------------
-// Barang Manajemen Routes
-// -------------------------
+// Route untuk Halaman Manajemen Barang Gabungan (Resource-like routes)
 Route::get('/barang-manajemen', [BarangManajemenController::class, 'index'])->name('barang-manajemen.index');
 
 Route::get('/barang-manajemen/create', [BarangManajemenController::class, 'create'])->name('barang-manajemen.create');
@@ -51,12 +90,15 @@ Route::get('/notifications', function () {
     return view('notifications.index');
 })->name('notifications.index');
 
-// Route tambahan (contoh view statis barang)
-Route::get('/barang', function () {
-    return view('barang');
+Route::prefix('pimpinan')->name('pimpinan.')->group(function () {
+    Route::get('/dashboard', [PimpinanController::class, 'dashboard'])->name('dashboard'); 
+   Route::get('/barang-masuk', [PimpinanController::class, 'barangMasuk'])->name('barang-masuk');
+    Route::get('/barang-keluar', [PimpinanController::class, 'barangKeluar'])->name('barang-keluar');
+    Route::get('/databarang', [PimpinanController::class, 'dataBarang'])->name('databarang');
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 });
 
-// Default route
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/barang-masuk/cetak', [PimpinanController::class, 'cetakBarangMasuk'])->name('cetak-barang-masuk');
+Route::get('/barang-keluar/cetak', [PimpinanController::class, 'cetakBarangKeluar'])->name('cetak-barang-keluar');
+Route::get('/databarang/cetak', [PimpinanController::class, 'cetakDataBarang'])->name('cetak-databarang');
