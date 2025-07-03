@@ -102,3 +102,21 @@ Route::prefix('pimpinan')->name('pimpinan.')->group(function () {
 Route::get('/barang-masuk/cetak', [PimpinanController::class, 'cetakBarangMasuk'])->name('cetak-barang-masuk');
 Route::get('/barang-keluar/cetak', [PimpinanController::class, 'cetakBarangKeluar'])->name('cetak-barang-keluar');
 Route::get('/databarang/cetak', [PimpinanController::class, 'cetakDataBarang'])->name('cetak-databarang');
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+
+
+Route::get('/logout', function () {
+    Auth::logout(); // keluarin user
+    return redirect('/login'); // arahkan ke halaman login
+});
+Route::get('/user/dashboard', function () {
+    return view('user.dashboard-user');
+});
+Route::post('/user/logout', function () {
+    Auth::logout();
+    return redirect('/login'); // atau redirect ke halaman login user
+})->name('user.logout');
+
+Route::get('/user/peminjaman/form', [PeminjamanController::class, 'create'])->name('user.peminjaman.form');
+Route::post('/user/peminjaman/store', [PeminjamanController::class, 'store'])->name('user.peminjaman.store');
+

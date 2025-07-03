@@ -12,6 +12,6 @@
     </a>
 
     <!-- Tabel atau konten lainnya -->
-    <p>Isi data barang keseluruhan di sini...</p>
+    <p>Data Barang (Table)</p>
     
 @endsection
