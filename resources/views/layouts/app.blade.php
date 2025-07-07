@@ -178,7 +178,7 @@
 <header class="topbar">
     <div class="left">
         <img src="{{ asset('image/logo tel.png') }}" alt="Logo" />
-        <h1>PT TANJUNGENIM LESTARI</h1>
+        <h1>PT TANJUNGENIM LESTARI PULP AND PAPER</h1>
     </div>
     <div class="user-role-container">
         <div class="dropdown" id="userDropdown">
