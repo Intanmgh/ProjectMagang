@@ -78,7 +78,7 @@
         }
 
         .logout-dropdown a {
-            color: #d9534f;
+            color:rgb(56, 142, 60);
             text-decoration: none;
             display: block;
             padding: 10px 16px;
@@ -86,7 +86,7 @@
         }
 
         .logout-dropdown a:hover {
-            background-color: #f8d7da;
+            background-color:rgb(202, 250, 183);
         }
 
         .sidebar {

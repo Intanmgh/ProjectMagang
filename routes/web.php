@@ -6,7 +6,7 @@ use App\Http\Controllers\BarangManajemenController; // Import controller baru
 use App\Http\Controllers\Auth\LoginController; // Impor LoginController
 use Illuminate\Support\Facades\Auth; // Impor Auth facade
 use App\Http\Controllers\PimpinanController;
-
+use App\Http\Controllers\Pimpinan\DataController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -119,4 +119,9 @@ Route::post('/user/logout', function () {
 
 Route::get('/user/peminjaman/form', [PeminjamanController::class, 'create'])->name('user.peminjaman.form');
 Route::post('/user/peminjaman/store', [PeminjamanController::class, 'store'])->name('user.peminjaman.store');
+
+Route::middleware(['auth:pimpinan'])->group(function () {
+    Route::get('/pimpinan/data', [DataController::class, 'index']);
+});
+
 
