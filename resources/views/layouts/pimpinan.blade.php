@@ -2,10 +2,9 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>@yield('title','Dashboard Pimpinan')</title>
-    @vite(['resources/css/app.css','resources/js/app.js']) {{-- jika pakai Vite + Tailwind --}}
+    <title>@yield('title','Halaman Pimpinan')</title>
+    @vite(['resources/js/app.js'])
     <style>
-        /* Warna & ukuran mirip screenshot */
         :root {
             --green-dark: #1b5e20;
             --green:       #2e7d32;
@@ -24,29 +23,21 @@
     </style>
 </head>
 <body>
-    {{-- top bar --}}
+    {{-- Top Bar --}}
     <header class="topbar">
         <img src="{{ asset('tel_logo.png') }}" alt="TeL Logo">
         <h1 style="font-size:18px; font-weight:600;">PT TANJUNGENIM LESTARI PULP AND PAPER</h1>
     </header>
 
-    {{-- sidebar --}}
+    {{-- Sidebar --}}
     <nav class="sidebar">
-        <a href="{{ route('pimpinan.dashboard') }}" class="{{ request()->routeIs('pimpinan.dashboard') ? 'active' : '' }}">
-            Dashboard
+        <a href="{{ route('pimpinan.kelola') }}" class="{{ request()->routeIs('pimpinan.kelola') ? 'active' : '' }}">
+            Kelola&nbsp;Barang
         </a>
-        <a href="{{ route('pimpinan.masuk') }}"     class="{{ request()->routeIs('pimpinan.masuk') ? 'active' : '' }}">
-            Barang&nbsp;Masuk
-        </a>
-        <a href="{{ route('pimpinan.keluar') }}"    class="{{ request()->routeIs('pimpinan.keluar') ? 'active' : '' }}">
-            Barang&nbsp;Keluar
-        </a>
-        <a href="{{ route('pimpinan.data') }}"      class="{{ request()->routeIs('pimpinan.data') ? 'active' : '' }}">
-            Data&nbsp;Barang
-        </a>
+        
     </nav>
 
-    {{-- main content --}}
+    {{-- Main Content --}}
     <main>
         @yield('content')
     </main>

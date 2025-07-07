@@ -104,10 +104,16 @@ Route::prefix('pimpinan')->name('pimpinan.')->group(function () {
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 });
+// Route untuk Cetak PDF Barang Masuk oleh Pimpinan
+Route::get('/pimpinan/barang-masuk/pdf', [PimpinanController::class, 'cetakPDF'])
+    ->name('pimpinan.barangmasuk.pdf');
 
-Route::get('/barang-masuk/cetak', [PimpinanController::class, 'cetakBarangMasuk'])->name('cetak-barang-masuk');
-Route::get('/barang-keluar/cetak', [PimpinanController::class, 'cetakBarangKeluar'])->name('cetak-barang-keluar');
-Route::get('/databarang/cetak', [PimpinanController::class, 'cetakDataBarang'])->name('cetak-databarang');
+
+// Route halaman cetak untuk barang keluar
+Route::get('/pimpinan/cetak/barang-keluar', [PimpinanController::class, 'cetakBarangKeluar'])->name('pimpinan.cetak.barangKeluar');
+
+// Route halaman cetak untuk data barang (stok)
+Route::get('/pimpinan/cetak/data-barang', [PimpinanController::class, 'cetakDataBarang'])->name('pimpinan.cetak.dataBarang');
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
 
@@ -129,5 +135,13 @@ Route::post('/user/peminjaman/store', [PeminjamanController::class, 'store'])->n
 Route::middleware(['auth:pimpinan'])->group(function () {
     Route::get('/pimpinan/data', [DataController::class, 'index']);
 });
+
+
+Route::get('/pimpinan/kelola-barang', [PimpinanController::class, 'kelolaBarang'])
+    ->middleware('role:pimpinan')
+    ->name('pimpinan.kelola');
+
+
+Route::get('/pimpinan/data-barang/cetak', [PimpinanController::class, 'cetakPDFDataBarang'])->name('pimpinan.barangdata.pdf');
 
 

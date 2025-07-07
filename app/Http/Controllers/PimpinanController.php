@@ -3,51 +3,64 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\KelolaBarang;
+use App\Models\DataBarang;
+use PDF; // Tambahkan ini jika pakai dompdf
 
 class PimpinanController extends Controller
 {
     // Halaman Dashboard Pimpinan
-    public function dashboard() {
-        // Dummy data sementara
-        $barangMasuk = 12;
-        $barangKeluar = 7;
-        $totalBarang = 30;
+    public function dashboard()
+    {
+        $barangMasuk = KelolaBarang::where('jumlah', '>', 0)->count();
+        $barangKeluar = KelolaBarang::where('jumlah', '<', 0)->count();
+        $totalBarang = DataBarang::sum('stok');
 
         return view('pimpinan.dashboard-pimpinan', compact('barangMasuk', 'barangKeluar', 'totalBarang'));
     }
 
     // Halaman Barang Masuk
-    public function barangMasuk() {
-        $data = collect(); // Bisa diisi data dari database nanti
-        return view('pimpinan.masuk', compact('data'));
+    public function barangMasuk()
+    {
+        $dataBarang = KelolaBarang::where('jumlah', '>', 0)->orderBy('tanggal', 'desc')->get();
+        return view('pimpinan.masuk', compact('dataBarang'));
     }
 
     // Halaman Barang Keluar
-    public function barangKeluar() {
-        $data = collect(); // Bisa diisi data dari database nanti
-        return view('pimpinan.keluar', compact('data'));
+    public function barangKeluar()
+    {
+        $dataBarang = KelolaBarang::where('jumlah', '<', 0)->orderBy('tanggal', 'desc')->get();
+        return view('pimpinan.keluar', compact('dataBarang'));
     }
 
-    // Halaman Data Barang
-   public function dataBarang() {
-    $data = collect(); // bisa diganti dengan data asli nantinya
-    return view('pimpinan.data', compact('data'));
-}
+    // Halaman Data Barang (stok saat ini)
+    public function dataBarang()
+    {
+        $dataBarang = DataBarang::orderBy('kode_barang')->get();
+        return view('pimpinan.data', compact('dataBarang'));
+    }
 
-public function cetakBarangMasuk() {
-    $data = collect(); // bisa isi data asli nanti
-    return view('pimpinan.cetak.masuk', compact('data'));
-}
+    // ✅ Cetak PDF Barang Masuk
+    public function cetakPDFBarangMasuk()
+    {
+        $dataBarang = KelolaBarang::where('jumlah', '>', 0)->orderBy('tanggal', 'desc')->get();
+        $pdf = PDF::loadView('pimpinan.cetak.masuk', compact('dataBarang'));
+        return $pdf->download('barang-masuk.pdf');
+    }
 
-public function cetakBarangKeluar() {
-    $data = collect(); 
-    return view('pimpinan.cetak.keluar', compact('data'));
-}
+    // Cetak PDF Barang Keluar
+    public function cetakPDFBarangKeluar()
+    {
+        $dataBarang = KelolaBarang::where('jumlah', '<', 0)->orderBy('tanggal', 'desc')->get();
+        $pdf = PDF::loadView('pimpinan.cetak.keluar', compact('dataBarang'));
+        return $pdf->download('barang-keluar.pdf');
+    }
 
-public function cetakDataBarang() {
-    $data = collect(); 
-    return view('pimpinan.cetak.data', compact('data'));
-}
-
-
+    // Cetak PDF Data Barang
+    public function cetakPDFDataBarang()
+    {
+        $dataBarang = DataBarang::orderBy('kode_barang')->get();
+        $pdf = PDF::loadView('pimpinan.cetak.data', compact('dataBarang'));
+        return $pdf->download('data-barang.pdf');
+    }
 }
