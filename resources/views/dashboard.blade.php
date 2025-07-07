@@ -1,4 +1,4 @@
-@extends('layouts.app')
+<!-- @extends('layouts.app')
 
 @section('title', 'Dashboard')
 
@@ -12,4 +12,4 @@
     <h2 class="page-title">Selamat Datang di Dashboard</h2>
 
     <p>Ini adalah halaman utama aplikasi manajemen barang.</p>
-@endsection
+@endsection -->

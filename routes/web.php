@@ -6,7 +6,7 @@ use App\Http\Controllers\BarangManajemenController; // Import controller baru
 use App\Http\Controllers\Auth\LoginController; // Impor LoginController
 use Illuminate\Support\Facades\Auth; // Impor Auth facade
 use App\Http\Controllers\PimpinanController;
-use App\Http\Controllers\Pimpinan\DataController;
+use App\Http\Controllers\PeminjamanAdminController; 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -77,18 +77,24 @@ Route::put('/barang-manajemen/{item}', [BarangManajemenController::class, 'updat
 
 Route::delete('/barang-manajemen/{item}', [BarangManajemenController::class, 'destroy'])->name('barang-manajemen.destroy');
 
-// Halaman Tambahan
-Route::get('/data-barang', function () {
-    return view('data_barang.index');
-})->name('data-barang.index');
+Route::post('/barang-masuk', [BarangManajemenController::class, 'storeMasuk'])->name('barang-manajemen.storeMasuk');
+Route::get('/data-barang', [BarangManajemenController::class, 'dataBarang'])->name('data-barang.index');
+Route::get('/peminjaman-admin', [PeminjamanAdminController::class, 'index'])->name('peminjaman.admin');
+// Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
 
-Route::get('/pengembalian', function () {
-    return view('pengembalian.index');
-})->name('pengembalian.index');
 
-Route::get('/notifications', function () {
-    return view('notifications.index');
-})->name('notifications.index');
+// // Halaman Tambahan
+// Route::get('/data-barang', function () {
+//     return view('data_barang.index');
+// })->name('data-barang.index');
+
+// Route::get('/peminjaman_admin', function () {
+//     return view('peminjaman_admin.index');
+// })->name('peminjaman_admin.index');
+
+// Route::get('/notifications', function () {
+//     return view('notifications.index');
+// })->name('notifications.index');
 
 Route::prefix('pimpinan')->name('pimpinan.')->group(function () {
     Route::get('/dashboard', [PimpinanController::class, 'dashboard'])->name('dashboard'); 

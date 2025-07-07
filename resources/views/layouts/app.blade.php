@@ -12,6 +12,7 @@
     {{-- <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
 
     <style>
+        /* CSS global Anda yang sudah ada */
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
@@ -167,7 +168,10 @@
             }
         }
     </style>
-    
+
+    {{-- BARIS INI YANG HILANG! TAMBAHKAN DI SINI --}}
+    @stack('styles')
+
 </head>
 <body>
 
@@ -197,8 +201,8 @@
         <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <a href="{{ route('dashboard') }}"><i class=" "></i> <span>Data Barang</span></a>
         </li>
-        <li class="{{ request()->routeIs('pengembalian.index') ? 'active' : '' }}">
-            <a href="{{ route('pengembalian.index') }}"><i class=" "></i> <span>Peminjaman</span></a>
+        <li class="{{ request()->routeIs('peminjaman.admin') ? 'active' : '' }}">
+            <a href="{{ route('peminjaman.admin') }}"><i class=" "></i> <span>Peminjaman</span></a>
         </li>
     </ul>
 </aside>
