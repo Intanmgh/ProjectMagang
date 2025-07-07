@@ -6,6 +6,9 @@ use App\Http\Controllers\BarangManajemenController; // Import controller baru
 use App\Http\Controllers\Auth\LoginController; // Impor LoginController
 use Illuminate\Support\Facades\Auth; // Impor Auth facade
 use App\Http\Controllers\PimpinanController;
+use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -98,3 +101,28 @@ Route::prefix('pimpinan')->name('pimpinan.')->group(function () {
 Route::get('/barang-masuk/cetak', [PimpinanController::class, 'cetakBarangMasuk'])->name('cetak-barang-masuk');
 Route::get('/barang-keluar/cetak', [PimpinanController::class, 'cetakBarangKeluar'])->name('cetak-barang-keluar');
 Route::get('/databarang/cetak', [PimpinanController::class, 'cetakDataBarang'])->name('cetak-databarang');
+
+
+//USER
+Route::get('/user/dashboard', function () {
+    return view('user.dashboard-user');
+});
+
+Route::post('/user/logout', function () {
+    Auth::logout();
+    return redirect('/login'); // atau redirect ke halaman login user
+})->name('user.logout');
+
+Route::post('/user/logout', [UserController::class, 'logout'])->name('user.logout');
+
+Route::get('/user/databarang', [UserController::class, 'dataBarang'])->name('user.databarang');
+Route::get('/user/pengajuan', [UserController::class, 'pengajuan'])->name('user.pengajuan');
+
+Route::middleware(['auth'])->prefix('user')->group(function () {
+    Route::get('/pengajuan', [UserController::class, 'databarang'])->name('user.databarang');
+
+    Route::get('/pengajuan', [UserController::class, 'pengajuan'])->name('user.pengajuan');
+    Route::post('/pengajuan', [UserController::class, 'storePengajuan'])->name('user.pengajuan.store');
+
+    Route::get('/riwayat', [UserController::class, 'riwayat'])->name('user.riwayat');
+});
