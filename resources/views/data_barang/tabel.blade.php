@@ -1,4 +1,6 @@
-@extends('layouts.app-user')
+@extends('layouts.app')
+
+@section('title', 'Data Barang')
 
 @section('content')
     <h2 style="font-weight: 700; color:rgb(0, 0, 0);">Data Barang</h2>

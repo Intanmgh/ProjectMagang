@@ -148,8 +148,8 @@
     <!-- SIDEBAR -->
     <div class="sidebar">
         <ul>
-            <li><a href="{{ url('/user/databarang') }}">Data Barang</a></li>
-            <li><a href="{{ url('/user/pengajuan') }}">Pengajuan</a></li>
+            <li><a href="{{ route('user.dataBarang') }}">Data Barang</a></li>
+            <li><a href="{{ route('user.pengajuan') }}">Pengajuan</a></li>
         </ul>
     </div>
 

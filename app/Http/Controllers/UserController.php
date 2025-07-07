@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\DataBarang;
 use App\Models\Pengajuan;
 
 class UserController extends Controller
 {
-    public function databarang()
+    public function dataBarang()
     {
-        return view('user.databarang');
+        $dataBarang = DataBarang::all(); // Ambil data yang sama
+        return view('user.databarang', compact('dataBarang')); // View khusus user
     }
+
 
       public function pengajuan()
     {

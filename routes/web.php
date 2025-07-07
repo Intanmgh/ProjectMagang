@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth; // Impor Auth facade
 use App\Http\Controllers\PimpinanController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\UserController;
-
+ 
 
 /*
 |--------------------------------------------------------------------------
@@ -65,29 +65,39 @@ Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard
 
 // Route untuk Halaman Manajemen Barang Gabungan (Resource-like routes)
 Route::get('/barang-manajemen', [BarangManajemenController::class, 'index'])->name('barang-manajemen.index');
+
+Route::get('/barang-manajemen/create', [BarangManajemenController::class, 'create'])->name('barang-manajemen.create');
+
 Route::post('/barang-manajemen/store-masuk', [BarangManajemenController::class, 'storeMasuk'])->name('barang-manajemen.store-masuk');
+
 Route::post('/barang-manajemen/store-keluar', [BarangManajemenController::class, 'storeKeluar'])->name('barang-manajemen.store-keluar');
+
 Route::put('/barang-manajemen/update-status', [BarangManajemenController::class, 'updateStatus'])->name('barang-manajemen.update-status');
 
-// Tambahan routes untuk Edit dan Delete (CRUD pada data tabel)
 Route::get('/barang-manajemen/{item}/edit', [BarangManajemenController::class, 'edit'])->name('barang-manajemen.edit');
+
 Route::put('/barang-manajemen/{item}', [BarangManajemenController::class, 'update'])->name('barang-manajemen.update');
+
 Route::delete('/barang-manajemen/{item}', [BarangManajemenController::class, 'destroy'])->name('barang-manajemen.destroy');
 
-// Route untuk Data Barang (jika Anda ingin halaman terpisah selain di tab)
-Route::get('/data-barang', function () {
-    return view('data_barang.index'); // Buat view ini jika diperlukan
-})->name('data-barang.index');
+Route::post('/barang-masuk', [BarangManajemenController::class, 'storeMasuk'])->name('barang-manajemen.storeMasuk');
+Route::get('/data-barang', [BarangManajemenController::class, 'dataBarang'])->name('data-barang.index');
+Route::get('/peminjaman-admin', [PeminjamanAdminController::class, 'index'])->name('peminjaman.admin');
+// Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
 
-// Route untuk Pengembalian (jika Anda ingin halaman terpisah)
-Route::get('/pengembalian', function () {
-    return view('pengembalian.index'); // Buat view ini jika diperlukan
-})->name('pengembalian.index');
 
-// Route untuk Notifikasi (jika Anda ingin halaman terpisah)
-Route::get('/notifications', function () {
-    return view('notifications.index'); // Buat view ini jika diperlukan
-})->name('notifications.index');
+// // Halaman Tambahan
+// Route::get('/data-barang', function () {
+//     return view('data_barang.index');
+// })->name('data-barang.index');
+
+// Route::get('/peminjaman_admin', function () {
+//     return view('peminjaman_admin.index');
+// })->name('peminjaman_admin.index');
+
+// Route::get('/notifications', function () {
+//     return view('notifications.index');
+// })->name('notifications.index');
 
 Route::prefix('pimpinan')->name('pimpinan.')->group(function () {
     Route::get('/dashboard', [PimpinanController::class, 'dashboard'])->name('dashboard'); 
@@ -117,6 +127,10 @@ Route::post('/user/logout', [UserController::class, 'logout'])->name('user.logou
 
 Route::get('/user/databarang', [UserController::class, 'dataBarang'])->name('user.databarang');
 Route::get('/user/pengajuan', [UserController::class, 'pengajuan'])->name('user.pengajuan');
+
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/user/databarang', [UserController::class, 'dataBarang'])->name('user.dataBarang');
+});
 
 Route::middleware(['auth'])->prefix('user')->group(function () {
     Route::get('/pengajuan', [UserController::class, 'databarang'])->name('user.databarang');

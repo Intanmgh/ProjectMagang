@@ -186,6 +186,13 @@
             }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+<style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+</style>
+
 </head>
 <body>
     <div class="login-page-container">
