@@ -5,14 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@yield('title', 'Aplikasi Saya')</title>
 
-    <!-- ✅ Font Awesome (tanpa integrity) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-    <!-- Opsional: jika kamu belum punya app.css, hapus atau komentar -->
-    {{-- <link rel="stylesheet" href="{{ asset('css/style.css') }}"> --}}
-
     <style>
-        /* CSS global Anda yang sudah ada */
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
@@ -134,6 +130,28 @@
             background-color: #1B5E20;
         }
 
+        .sidebar ul li.dropdown-menu > a {
+            cursor: pointer;
+        }
+
+        .sidebar ul li ul.submenu {
+            display: none;
+            background-color: #388e3c;
+        }
+
+        .sidebar ul li ul.submenu li a {
+            padding: 12px 40px;
+            background-color: #388e3c;
+        }
+
+        .sidebar ul li.dropdown-menu.open ul.submenu {
+            display: block;
+        }
+
+        .sidebar ul li ul.submenu li a:hover {
+            background-color: #1b5e20;
+        }
+
         .content {
             margin-left: 220px;
             padding: 85px 30px 30px 30px;
@@ -169,9 +187,7 @@
         }
     </style>
 
-    {{-- BARIS INI YANG HILANG! TAMBAHKAN DI SINI --}}
     @stack('styles')
-
 </head>
 <body>
 
@@ -195,15 +211,34 @@
 
 <aside class="sidebar">
     <ul>
-        <li class="{{ request()->routeIs('barang-manajemen.index') ? 'active' : '' }}">
-            <a href="{{ route('barang-manajemen.index') }}"><i class=" "></i> <span>Kelola Barang</span></a>
+        <li class="dropdown-menu {{ request()->is('jenis*') || request()->is('satuan*') || request()->is('lokasi*') || request()->is('barang*') ? 'open' : '' }}">
+            <a href="javascript:void(0)" onclick="toggleDropdown(this)">
+                <span>Master Barang</span>
+               <span class="arrow" style="float: right;">▼</span>
+            </a>
+            <ul class="submenu">
+                <li><a href="{{ route('jenis.index') }}">Jenis</a></li>
+                <li><a href="{{ route('satuan.index') }}">Satuan</a></li>
+                <li><a href="{{ route('lokasi.index') }}">Lokasi</a></li>
+                <li><a href="{{ route('barang.index') }}">Barang</a></li>
+            </ul>
         </li>
+
         <li class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-            <a href="{{ route('dashboard') }}"><i class=" "></i> <span>Data Barang</span></a>
+            <a href="{{ route('dashboard') }}"><span>Barang Masuk</span></a>
         </li>
-        <li class="{{ request()->routeIs('peminjaman.admin') ? 'active' : '' }}">
-            <a href="{{ route('peminjaman.admin') }}"><i class=" "></i> <span>Peminjaman</span></a>
-        </li>
+       <li class="{{ request()->routeIs('barangkeluar.index') ? 'active' : '' }}">
+    <a href="{{ route('barangkeluar.index') }}"><span>Barang Keluar</span></a>
+</li>
+
+<li class="{{ request()->routeIs('pengajuan.index') ? 'active' : '' }}">
+    <a href="{{ route('pengajuan.index') }}"><span>Pengajuan</span></a>
+</li>
+
+<li class="{{ request()->routeIs('databarang.index') ? 'active' : '' }}">
+    <a href="{{ route('databarang.index') }}"><span>Data Barang</span></a>
+</li>
+
     </ul>
 </aside>
 
@@ -223,6 +258,18 @@
     document.addEventListener('click', () => {
         dropdown.classList.remove('show');
     });
+
+    function toggleDropdown(element) {
+        const parent = element.closest('li');
+        parent.classList.toggle('open');
+
+        const arrow = element.querySelector('.arrow');
+        if (parent.classList.contains('open')) {
+            arrow.style.transform = 'rotate(90deg)';
+        } else {
+            arrow.style.transform = 'rotate(0deg)';
+        }
+    }
 </script>
 
 </body>

@@ -6,7 +6,17 @@ use App\Http\Controllers\BarangManajemenController; // Import controller baru
 use App\Http\Controllers\Auth\LoginController; // Impor LoginController
 use Illuminate\Support\Facades\Auth; // Impor Auth facade
 use App\Http\Controllers\PimpinanController;
-use App\Http\Controllers\PeminjamanAdminController; 
+use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\JenisController;
+use App\Http\Controllers\SatuanController;
+use App\Http\Controllers\LokasiController;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\BarangKeluarController;
+use App\Http\Controllers\PengajuanController;
+use App\Http\Controllers\DataBarangController;
+ 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -79,7 +89,6 @@ Route::delete('/barang-manajemen/{item}', [BarangManajemenController::class, 'de
 
 Route::post('/barang-masuk', [BarangManajemenController::class, 'storeMasuk'])->name('barang-manajemen.storeMasuk');
 Route::get('/data-barang', [BarangManajemenController::class, 'dataBarang'])->name('data-barang.index');
-Route::get('/peminjaman-admin', [PeminjamanAdminController::class, 'index'])->name('peminjaman.admin');
 // Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
 
 
@@ -117,23 +126,32 @@ Route::get('/pimpinan/cetak/data-barang', [PimpinanController::class, 'cetakData
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 
 
-Route::get('/logout', function () {
-    Auth::logout(); // keluarin user
-    return redirect('/login'); // arahkan ke halaman login
-});
+//USER
 Route::get('/user/dashboard', function () {
     return view('user.dashboard-user');
 });
+
 Route::post('/user/logout', function () {
     Auth::logout();
     return redirect('/login'); // atau redirect ke halaman login user
 })->name('user.logout');
 
-Route::get('/user/peminjaman/form', [PeminjamanController::class, 'create'])->name('user.peminjaman.form');
-Route::post('/user/peminjaman/store', [PeminjamanController::class, 'store'])->name('user.peminjaman.store');
+Route::post('/user/logout', [UserController::class, 'logout'])->name('user.logout');
 
-Route::middleware(['auth:pimpinan'])->group(function () {
-    Route::get('/pimpinan/data', [DataController::class, 'index']);
+Route::get('/user/databarang', [UserController::class, 'dataBarang'])->name('user.databarang');
+Route::get('/user/pengajuan', [UserController::class, 'pengajuan'])->name('user.pengajuan');
+
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/user/databarang', [UserController::class, 'dataBarang'])->name('user.dataBarang');
+});
+
+Route::middleware(['auth'])->prefix('user')->group(function () {
+    Route::get('/pengajuan', [UserController::class, 'databarang'])->name('user.databarang');
+
+    Route::get('/pengajuan', [UserController::class, 'pengajuan'])->name('user.pengajuan');
+    Route::post('/pengajuan', [UserController::class, 'storePengajuan'])->name('user.pengajuan.store');
+
+    Route::get('/riwayat', [UserController::class, 'riwayat'])->name('user.riwayat');
 });
 
 
@@ -145,3 +163,72 @@ Route::get('/pimpinan/kelola-barang', [PimpinanController::class, 'kelolaBarang'
 Route::get('/pimpinan/data-barang/cetak', [PimpinanController::class, 'cetakPDFDataBarang'])->name('pimpinan.barangdata.pdf');
 
 
+//Route utuk admin baru
+Route::resource('jenis', JenisController::class);
+Route::resource('satuan', SatuanController::class);
+Route::resource('lokasi', LokasiController::class);
+Route::resource('barang', BarangController::class);
+
+Route::get('/barang-keluar', [BarangKeluarController::class, 'index'])->name('barangkeluar.index');
+Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
+Route::get('/data-barang', [DataBarangController::class, 'index'])->name('databarang.index');
+
+Route::get('/jenis', function () {
+    $data = [
+        ['jenis' => 'Operasional', 'keterangan' => 'Inventaris yang terlibat dalam operasi sehari-hari'],
+        ['jenis' => 'Persediaan', 'keterangan' => 'Inventaris yang digunakan untuk menunjang operasi sehari-hari'],
+        ['jenis' => 'Administrasi', 'keterangan' => 'Inventaris peralatan kantor'],
+        ['jenis' => 'Kendaraan Dinas', 'keterangan' => 'Milik Dimas Kanjeng Taat Pribadi'],
+        ['jenis' => 'test notif berhasil', 'keterangan' => '123'],
+    ];
+    return view('jenis.index', compact('data'));
+})->name('jenis.index');
+
+Route::get('/jenis/create', function () {
+    return "<h3 style='padding: 2rem'>Form Tambah Jenis Barang</h3>";
+})->name('jenis.create');
+
+Route::get('/satuan', function () {
+    $data = [
+        ['id' => 'STN-001', 'nama' => 'Buah'],
+        ['id' => 'STN-002', 'nama' => 'Unit'],
+        ['id' => 'STN-003', 'nama' => 'Paket'],
+    ];
+    return view('satuan.index', compact('data'));
+})->name('satuan.index');
+
+Route::get('/lokasi', function () {
+    $data = [
+        ['id' => 'LKS-001', 'nama' => 'Gudang A'],
+        ['id' => 'LKS-002', 'nama' => 'Gudang B'],
+        ['id' => 'LKS-003', 'nama' => 'Rak 3'],
+    ];
+    return view('lokasi.index', compact('data'));
+})->name('lokasi.index');
+
+Route::get('/barang', function () {
+    $data = [
+        [
+            'id' => 'BRG-001',
+            'nama' => 'Meja',
+            'jenis' => 'Perabot',
+            'satuan' => 'Buah',
+            'lokasi' => 'Gudang A',
+        ],
+        [
+            'id' => 'BRG-002',
+            'nama' => 'Laptop',
+            'jenis' => 'Elektronik',
+            'satuan' => 'Unit',
+            'lokasi' => 'Gudang B',
+        ],
+        [
+            'id' => 'BRG-003',
+            'nama' => 'Kursi',
+            'jenis' => 'Perabot',
+            'satuan' => 'Buah',
+            'lokasi' => 'Rak 3',
+        ],
+    ];
+    return view('barang.index', compact('data'));
+})->name('barang.index');
